@@ -12,12 +12,11 @@ pandas = ">=2.3.3,<3"
 aiomysql = ">=0.2.0,<0.3"
 river = ">=0.13.0,<0.14"
 pymoo = ">=0.6.1.5,<0.7"
-numpy = ">=1.26.4,<2"
-matplotlib = ">=3.10.8,<4"
 fastapi = ">=0.121.2,<0.122"
-pyside6 = ">=6.9.3,<7"
 
 [pypi-dependencies]
-pyside6-fluent-widgets = { version = ">=1.9.2, <2", extras = ["full"] }
 pyaedt = { version = ">=0.22.1, <0.23", extras = ["all"] }
+pyside6-fluent-widgets = { version = ">=1.9.2, <2", extras = ["full"] }
+pyside6-essentials = ">=6.9.3, <7"
 pyside6-addons = ">=6.9.3, <7"
+numpy = "*"
