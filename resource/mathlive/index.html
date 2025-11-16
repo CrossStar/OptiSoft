@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <script src="https://unpkg.com/mathlive"></script>
+</head>
+<body>
+    <math-field id="formula" style="width: 100%; height: 200px" serialize={{ "defaultMode": "latex" }}></math-field>
+    <textarea id="latex" style="width: 100%; height: 100px; margin-top: 10px;"></textarea>
+
+    <script>
+        function convertLatexToAscii() {
+            if (typeof MathLive !== 'undefined') {
+                return MathLive.convertLatexToAsciiMath(document.querySelector('math-field').getValue());
+            } else {
+                return "MathLive is not loaded";
+            }
+        }
+
+        const mf = document.getElementById("formula");
+        const latex = document.getElementById("latex");
+
+        mf.setAttribute("placeholder", "u(别名) = \\frac{8\\pi h\\nu^3}{c^3}\\frac{1}{e^{{h \\nu}/{k T}} - 1}(表达式)");
+        mf.mathVirtualKeyboardPolicy = "manual";
+
+        mf.addEventListener("input",(ev) => latex.value = mf.value);
+
+        latex.value = mf.value;
+
+        latex.addEventListener("input", (ev) =>
+            mf.setValue(
+            ev.target.value,
+            {silenceNotifications: true}
+            )
+        );
+
+        window.addEventListener("DOMContentLoaded", () => latex.value = mf.value);
+
+    </script>
+</body>
+</html>

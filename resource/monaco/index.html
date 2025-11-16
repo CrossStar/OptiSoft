@@ -1,0 +1,102 @@
+<!--
+ * @Author: Zhixin Wu && wuzhixin.321@qq.com
+ * @Date: 2025-03-01 15:51:16
+ * @LastEditTime: 2025-03-03 11:15:40
+ * 
+ * Copyright (c) 2025 by wuzhixin.321@qq.com, All Rights Reserved. 
+-->
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <style>
+        @font-face {
+            font-family: 'JetBrainsMono';
+            src: url('./fonts/JetBrainsMono-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'LXGWWenKai';
+            src: url('./fonts/LXGWWenKai-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #container {
+            width: 100%;
+            height: 100%;
+            font-family: 'JetBrainsMono', 'LXGWWenKai', monospace;
+        }
+    </style>
+</head>
+<body>
+<div id="container"></div>
+
+<script>
+    var require = {
+        paths: {
+            vs: `${location.origin}/resource/monaco/node_modules/monaco-editor/min/vs`,
+        },
+    };
+</script>
+
+<script src="node_modules/monaco-editor/min/vs/loader.js"></script>
+<script>
+    require.config({
+        "vs/nls": {
+            availableLanguages: {
+                "*": "zh-cn", // 设置默认语言为中文
+            },
+        },
+    });
+
+    // 加载 Monaco 编辑器
+    fetch("./template.py")
+        .then((response) => response.text()) // 获取 Python 文件内容并转为文本
+        .then((text) => {
+            require(["vs/editor/editor.main"], function () {
+                monaco.editor.defineTheme('myCustomTheme', {
+                    base: 'vs',
+                    inherit: true,
+                    rules: [{ background: '#f2f4f7' }],
+                    colors: {
+                        'editor.background': '#f2f4f7',
+                    }
+                });
+
+                monaco.editor.setTheme('myCustomTheme'); // 设置自定义主题
+                monaco.editor.create(document.getElementById("container"), {
+                    value: text, // 设置模板文件内容
+                    language: "python",
+                    fontSize: 16, // 设置字体大小
+                    lineHeight: 22, // 行高
+                    fontFamily: "'JetBrainsMono', 'LXGWWenKai'", // 这里应用自定义字体
+                    automaticLayout: true, // 自动调整布局
+                    minimap: {
+                        enabled: true, // 启用小地图
+                        renderCharacters: true, // 渲染字符
+                        showSlider: "mouseover", // 小地图的滑块显示方式
+                    },
+                    scrollBeyondLastLine: false, // 禁止滚动超出最后一行
+                    wordWrap: "on", // 启用自动折行
+                    wordWrapColumn: 80, // 设置折行列数
+                });
+            });
+        })
+        .catch((error) => {
+            console.error("Error loading the template.py file:", error);
+        });
+</script>
+</body>
+</html>

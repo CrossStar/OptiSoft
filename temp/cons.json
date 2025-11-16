@@ -1,0 +1,6 @@
+{
+    "E": "mc^2",
+    "avgTorque": "\\;\\mathbf{ToothWidth}+\\;\\frac{\\mathbf{ToothTipAngle}}{2}",
+    "F": "\\;\\mathbf{SlotOpen}+\\;\\frac{\\mathbf{ToothTipDepth}}{2}",
+    "A": "\\;\\mathbf{Din}+\\sin\\;\\mathbf{Dout}"
+}

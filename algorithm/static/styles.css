@@ -1,0 +1,29 @@
+/* 全局基础设置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: Arial, sans-serif;
+}
+
+/* 主容器采用 flex 布局，垂直方向分布两个图表 */
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: stretch;
+  background-color: #f7f7f7;
+}
+
+/* 图表容器样式：自动撑满宽度，高度均分 */
+.chart-container {
+  flex: 1;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}

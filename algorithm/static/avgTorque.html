@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>AvgTorque 可视化</title>
+    <script src="/static/echarts.js"></script>
+    <script src="/static/chart_config.js"></script>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div id="avg_predict" class="chart-container" style="width: 100vw"></div>
+    <div id="avg_mae" class="chart-container" style="width: 100vw"></div>
+
+    <script>
+      const avgPredictChart = echarts.init(
+        document.getElementById("avg_predict")
+      );
+      const avgMAEChart = echarts.init(document.getElementById("avg_mae"));
+
+      function updateCharts() {
+        fetch("/api/results")
+          .then((res) => res.json())
+          .then((data) => {
+            const x = data.id;
+            const maxMae = Math.max(...data.mae_avg);
+            avgPredictChart.setOption(
+              generateChartOption({
+                title: "平均转矩 - 预测值与真实值对比",
+                xData: x,
+                legend: ["真实值", "预测值"],
+                series: [
+                  { name: "真实值", type: "line", data: data.true_avg },
+                  { name: "预测值", type: "line", data: data.pred_avg },
+                ],
+              })
+            );
+            avgMAEChart.setOption(
+              Object.assign(
+                generateChartOption({
+                  title: "平均转矩 - MAE 曲线",
+                  xData: x,
+                  legend: ["MAE"],
+                  series: [
+                    {
+                      name: "MAE",
+                      type: "line",
+                      data: data.mae_avg,
+                      smooth: true,
+                    },
+                  ],
+                }),
+                {
+                  yAxis: {
+                    type: "value",
+                    min: 0,
+                    max: maxMae,
+                  },
+                }
+              )
+            );
+          });
+      }
+
+      window.addEventListener("resize", () => {
+        avgPredictChart.resize();
+        avgMAEChart.resize();
+      });
+      // setInterval(updateCharts, 10000);
+      updateCharts();
+    </script>
+  </body>
+</html>

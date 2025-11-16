@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>TorqueRipple 可视化</title>
+    <script src="/static/echarts.js"></script>
+    <script src="/static/chart_config.js"></script>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div id="ripple_predict" class="chart-container" style="width: 100vw"></div>
+    <div id="ripple_mae" class="chart-container" style="width: 100vw"></div>
+
+    <script>
+      const ripplePredictChart = echarts.init(
+        document.getElementById("ripple_predict")
+      );
+      const rippleMAEChart = echarts.init(
+        document.getElementById("ripple_mae")
+      );
+
+      function updateCharts() {
+        fetch("/api/results")
+          .then((res) => res.json())
+          .then((data) => {
+            const x = data.id;
+            const maxMae = Math.max(...data.mae_ripple);
+            ripplePredictChart.setOption(
+              generateChartOption({
+                title: "转矩波动 - 预测值与真实值对比",
+                xData: x,
+                legend: ["真实值", "预测值"],
+                series: [
+                  { name: "真实值", type: "line", data: data.true_ripple },
+                  { name: "预测值", type: "line", data: data.pred_ripple },
+                ],
+              })
+            );
+            rippleMAEChart.setOption(
+              Object.assign(
+                generateChartOption({
+                  title: "转矩波动 - MAE 曲线",
+                  xData: x,
+                  legend: ["MAE"],
+                  series: [
+                    {
+                      name: "MAE",
+                      type: "line",
+                      data: data.mae_ripple,
+                      smooth: true,
+                    },
+                  ],
+                }),
+                {
+                  yAxis: {
+                    type: "value",
+                    min: 0,
+                    max: maxMae,
+                  },
+                }
+              )
+            );
+          });
+      }
+
+      window.addEventListener("resize", () => {
+        ripplePredictChart.resize();
+        rippleMAEChart.resize();
+      });
+      setInterval(updateCharts, 100000);
+      updateCharts();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,7 @@
+{
+    "F": "\\;\\bm{Moving1.LoadTorque}+\\;\\bm{Moving1.Torque}",
+    "avgTorque": "\\;\\mathbf{ToothWidth}+\\;\\frac{\\mathbf{ToothTipAngle}}{2}",
+    "": "\\;\\bm{Moving1.Torque}+\\;\\bm{Area(B11)}",
+    "\\;\\mathbf{Moving1.LoadTorque}": "\\;\\mathbf{Moving1.LoadTorque}",
+    "A=\\;\\bm{L(phaseC,phaseA)}": "A=\\;\\bm{L(phaseC,phaseA)}"
+}

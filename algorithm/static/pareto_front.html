@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>帕累托前沿可视化</title>
+    <script src="/static/echarts.js"></script>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div id="pareto_front" class="chart-container" style="width: 100vw; height: 80vh;"></div>
+
+    <script>
+      const paretoChart = echarts.init(document.getElementById("pareto_front"));
+
+      async function updateParetoChart() {
+        const res = await fetch("/api/optimize_results");
+        const data = await res.json();
+
+        let paretoData = data.pareto_front.map(item => [item[0], item[1]]);
+
+        // 按 转矩波动 排序（升序）
+        paretoData.sort((a, b) => a[0] - b[0]);
+
+        const xValues = paretoData.map(d => d[0]);
+        const yValues = paretoData.map(d => d[1]);
+
+        const xMin = Math.min(...xValues);
+        const xMax = Math.max(...xValues);
+        const yMin = Math.min(...yValues);
+        const yMax = Math.max(...yValues);
+
+        paretoChart.setOption({
+          title: {
+            text: "帕累托前沿 (转矩波动 vs 平均转矩)",
+            left: "center",
+          },
+          tooltip: {
+            trigger: "axis",
+            formatter: params => {
+              const point = params[0];
+              return `转矩波动: ${point.value[0]}<br/>平均转矩: ${point.value[1]}`;
+            }
+          },
+          xAxis: {
+            type: "value",
+            name: "平均转矩",
+            min: xMin,
+            max: xMax
+          },
+          yAxis: {
+            type: "value",
+            name: "转矩波动",
+            min: yMin,
+            max: yMax
+          },
+          series: [{
+            name: "Pareto Front",
+            type: "line",
+            data: paretoData,
+            symbol: "circle",
+            symbolSize: 8,
+            lineStyle: {
+              width: 2
+            }
+          }]
+        });
+      }
+
+      window.addEventListener("resize", () => {
+        paretoChart.resize();
+      });
+
+      updateParetoChart();
+    </script>
+  </body>
+</html>
